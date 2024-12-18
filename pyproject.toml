@@ -1,0 +1,18 @@
+[project]
+name = "gpt4-autoeval"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.2.1",
+    "cohere==5.3.3",
+    "datasets==2.15.0",
+    "jsonlines==4.0.0",
+    "openai==1.57.4",
+    "optimum>=1.20.0",
+    "simplejson>=3.19.3",
+    "tenacity==8.2.3",
+    "torch>=2.4.1",
+    "transformers>=4.44.2",
+]
