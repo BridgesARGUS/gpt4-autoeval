@@ -24,11 +24,11 @@ run_inference() {
     local model_name=$3
     
     if [ -z "$model_name" ]; then
-        model_name="Qwen/Qwen2.5-7B-Instruct"
+        model_name="shuyuej/gemma-2-27b-it-GPTQ"
     fi
     
     echo "Running inference with model: $model_name"
-    python "${SCRIPT_DIR}/inference.py" --input "$input_file" --output "$output_file" --model "$model_name"
+    python "${SCRIPT_DIR}/inference_gemma.py" --input "$input_file" --output "$output_file" --model "$model_name"
 }
 
 # Check if input arguments are provided

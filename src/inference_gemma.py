@@ -21,19 +21,11 @@ def setup_model(model_name):
 
 def generate_text(model, tokenizer, input_text):
     """Generate text using Gemma's specific format"""
-    messages = [
-        {"role": "system", "content": "あなたは役立つアシスタントです。ユーザーの質問に回答し、指示に従ってください。"},
-        {"role": "user", "content": input_text}
-    ]
-
-    prompt_text = tokenizer.apply_chat_template(
-        messages,
-        tokenize=False,
-        add_generation_prompt=True
-    )
+    # Gemma uses a simple prompt format without explicit roles
+    prompt = f"{input_text}"
     
     inputs = tokenizer(
-        prompt_text,
+        prompt,
         return_tensors="pt",
         truncation=True,
         max_length=2048  # Gemma context window
@@ -71,7 +63,7 @@ def process_dataset(model, tokenizer, input_file, output_file):
                 print(f"A. {generated_text}")
                 print()
                 
-                # Clear CUDA cache more frequently for memory management
+                # Clear CUDA cache more frequently for Gemma
                 if i % 5 == 0:
                     torch.cuda.empty_cache()
                     
