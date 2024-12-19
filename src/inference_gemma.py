@@ -3,29 +3,38 @@ import torch
 import jsonlines
 import argparse
 from pathlib import Path
+from auto_gptq import AutoGPTQForCausalLM
 
 def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
-        use_fast=False  # Required for Gemma
     )
     
-    model = AutoModelForCausalLM.from_pretrained(
+    # GPTQモデル用の読み込み方法を使用
+    model = AutoGPTQForCausalLM.from_quantized(
         model_name,
-        device_map="auto",
-        quantization_config={"load_in_4bit": True},  # GPTQ 4-bit quantization
+        device="cuda",
+        use_triton=False
     ).eval()
     
     return model, tokenizer
 
 def generate_text(model, tokenizer, input_text):
     """Generate text using Gemma's specific format"""
-    # Gemma uses a simple prompt format without explicit roles
-    prompt = f"{input_text}"
+    messages = [
+        {"role": "system", "content": "あなたは役立つアシスタントです。ユーザーの質問に回答し、指示に従ってください。"},
+        {"role": "user", "content": input_text}
+    ]
+
+    prompt_text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
     
     inputs = tokenizer(
-        prompt,
+        prompt_text,
         return_tensors="pt",
         truncation=True,
         max_length=2048  # Gemma context window
@@ -63,7 +72,7 @@ def process_dataset(model, tokenizer, input_file, output_file):
                 print(f"A. {generated_text}")
                 print()
                 
-                # Clear CUDA cache more frequently for Gemma
+                # Clear CUDA cache more frequently for memory management
                 if i % 5 == 0:
                     torch.cuda.empty_cache()
                     
