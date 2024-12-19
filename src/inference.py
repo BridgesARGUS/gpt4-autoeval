@@ -8,19 +8,12 @@ def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
-        use_fast=False  # Required for Gemma
+        use_fast=False
     )
-    
-    # 4bit量子化の設定を正しく行う
-    quantization_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_compute_dtype=torch.float16
-    )
-    
+
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        device_map="auto",
-        quantization_config=quantization_config
+        device_map="auto"
     ).eval()
     
     return model, tokenizer
