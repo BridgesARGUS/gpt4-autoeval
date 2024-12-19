@@ -33,3 +33,4 @@ __pycache__/
 *$py.class
 .ipynb_checkpoints
 OPENAI_API_KEY
+.env

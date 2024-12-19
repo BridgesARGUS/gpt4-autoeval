@@ -14,10 +14,11 @@ from . import openai_judge
 def main(model):
     # Load dataset
     dataset_name = os.environ.get('DATASET_NAME', 'test')
-    preds = read_jsonl(f"assets/{dataset_name}/preds.jsonl")
-    dataset = read_jsonl(f"assets/{dataset_name}/dataset.jsonl")
+    model_name = os.environ.get('MODEL_NAME')
+    preds = read_jsonl(f"../assets/{dataset_name}/{model_name}/preds.jsonl")
+    dataset = read_jsonl(f"../assets/{dataset_name}/{model_name}/dataset.jsonl")
 
-    with jsonlines.open(f'assets/{dataset_name}/result.jsonl', mode='w') as writer:
+    with jsonlines.open(f'../assets/{dataset_name}/{model_name}/result.jsonl', mode='w') as writer:
         # Evaluate each sample of the dataset, and write the result to the file
         for eval_data, pred_data in zip(dataset, preds):
             pred = pred_data["pred"]

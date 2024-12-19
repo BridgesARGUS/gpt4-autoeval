@@ -28,7 +28,7 @@ def calculate_grades(file_path):
 
 # Example usage
 if __name__ == '__main__':
-    file_path = 'result.jsonl'
+    file_path = '../assets/elyza_tasks_100/GPT4o/result.jsonl'
     total, avg = calculate_grades(file_path)
     print(f'合計点: {total}')
     print(f'平均点: {avg:.2f}')
