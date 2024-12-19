@@ -12,25 +12,17 @@ from pathlib import Path
 
 def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
-    # モデル名を確認
-    print(f"Loading model from: {model_name}")
-    
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_name,
-        use_fast=False
-    )
+    tokenizer = AutoTokenizer.from_pretrained(model_name) 
     
     # モデルの読み込みオプションを設定
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        device_map="auto",
+        device_map="cuda",
         torch_dtype=torch.float16,
-        revision="main"  # 明示的にリビジョンを指定
-    ).eval()
+    )
     
     return model, tokenizer
-    
-    return model, tokenizer
+
 
 def generate_text(model, tokenizer, input_text):
     """Generate text using Gemma's specific format"""
@@ -45,12 +37,7 @@ def generate_text(model, tokenizer, input_text):
         add_generation_prompt=True
     )
     
-    inputs = tokenizer(
-        prompt_text,
-        return_tensors="pt",
-        truncation=True,
-        max_length=2048
-    ).to(model.device)
+    inputs = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
 
     torch.manual_seed(42)
     

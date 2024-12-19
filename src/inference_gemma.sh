@@ -28,7 +28,7 @@ run_inference() {
     fi
     
     echo "Running inference with model: $model_name"
-    python "${SCRIPT_DIR}/inference.py" --input "$input_file" --output "$output_file" --model "$model_name"
+    python "${SCRIPT_DIR}/inference_gemma.py" --input "$input_file" --output "$output_file" --model "$model_name"
 }
 
 # Check if input arguments are provided
