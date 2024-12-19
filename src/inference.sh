@@ -24,7 +24,7 @@ run_inference() {
     local model_name=$3
     
     if [ -z "$model_name" ]; then
-        model_name="Qwen/Qwen2.5-32B-Instruct-GPTQ-Int8"
+        model_name="Qwen/Qwen2.5-7B-Instruct"
     fi
     
     echo "Running inference with model: $model_name"

@@ -65,7 +65,7 @@ def process_dataset(model, tokenizer, input_file, output_file):
 
 def main():
     parser = argparse.ArgumentParser(description='Run inference on a dataset')
-    parser.add_argument('--model', default="Qwen/Qwen2.5-32B-Instruct-GPTQ-Int8", help='Model name or path')
+    parser.add_argument('--model', default="Qwen/Qwen2.5-7B-Instruct", help='Model name or path')
     parser.add_argument('--input', required=True, help='Input JSONL file path')
     parser.add_argument('--output', required=True, help='Output JSONL file path')
     
