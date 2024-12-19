@@ -83,5 +83,5 @@ def main():
 
     print("Inference completed successfully!")
 
-if name == "main":
+if __name__ == "main":
     main()
