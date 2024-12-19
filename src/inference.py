@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 import jsonlines
 import argparse
@@ -11,10 +11,16 @@ def setup_model(model_name):
         use_fast=False  # Required for Gemma
     )
     
+    # 4bit量子化の設定を正しく行う
+    quantization_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_compute_dtype=torch.float16
+    )
+    
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         device_map="auto",
-        quantization_config={"load_in_4bit": True},  # GPTQ 4-bit quantization
+        quantization_config=quantization_config
     ).eval()
     
     return model, tokenizer
