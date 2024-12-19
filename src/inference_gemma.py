@@ -1,21 +1,26 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 import torch
 import jsonlines
 import argparse
 from pathlib import Path
-from auto_gptq import AutoGPTQForCausalLM
 
 def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
+    # モデル設定を読み込む
+    config = AutoConfig.from_pretrained(model_name)
+    
+    # トークナイザーの設定
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
+        use_fast=False
     )
     
-    # GPTQモデル用の読み込み方法を使用
-    model = AutoGPTQForCausalLM.from_quantized(
+    # GPTQモデルの読み込み
+    model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        device="cuda",
-        use_triton=False
+        config=config,
+        device_map="auto",
+        torch_dtype=torch.float16,  # GPTQモデルはfloat16で読み込む
     ).eval()
     
     return model, tokenizer
@@ -37,13 +42,11 @@ def generate_text(model, tokenizer, input_text):
         prompt_text,
         return_tensors="pt",
         truncation=True,
-        max_length=2048  # Gemma context window
+        max_length=2048
     ).to(model.device)
 
-    # Set seed for reproducibility
     torch.manual_seed(42)
     
-    # Gemma-specific generation parameters
     outputs = model.generate(
         **inputs,
         max_new_tokens=1024,
@@ -72,7 +75,6 @@ def process_dataset(model, tokenizer, input_file, output_file):
                 print(f"A. {generated_text}")
                 print()
                 
-                # Clear CUDA cache more frequently for memory management
                 if i % 5 == 0:
                     torch.cuda.empty_cache()
                     
@@ -88,7 +90,6 @@ def main():
     
     args = parser.parse_args()
     
-    # Ensure output directory exists
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
