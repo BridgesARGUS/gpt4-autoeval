@@ -1,8 +1,9 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import jsonlines
 import argparse
 from pathlib import Path
+from auto_gptq import AutoGPTQForCausalLM
 
 def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
@@ -10,10 +11,12 @@ def setup_model(model_name):
         model_name,
         use_fast=False
     )
-
-    model = AutoModelForCausalLM.from_pretrained(
+    
+    # GPTQモデル用の読み込み方法を使用
+    model = AutoGPTQForCausalLM.from_quantized(
         model_name,
-        device_map="auto"
+        device="cuda",
+        use_triton=False
     ).eval()
     
     return model, tokenizer
