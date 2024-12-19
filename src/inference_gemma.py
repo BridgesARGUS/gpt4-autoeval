@@ -4,24 +4,31 @@ import jsonlines
 import argparse
 from pathlib import Path
 
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+import jsonlines
+import argparse
+from pathlib import Path
+
 def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
-    # モデル設定を読み込む
-    config = AutoConfig.from_pretrained(model_name)
+    # モデル名を確認
+    print(f"Loading model from: {model_name}")
     
-    # トークナイザーの設定
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
         use_fast=False
     )
     
-    # GPTQモデルの読み込み
+    # モデルの読み込みオプションを設定
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        config=config,
         device_map="auto",
-        torch_dtype=torch.float16,  # GPTQモデルはfloat16で読み込む
+        torch_dtype=torch.float16,
+        revision="main"  # 明示的にリビジョンを指定
     ).eval()
+    
+    return model, tokenizer
     
     return model, tokenizer
 
