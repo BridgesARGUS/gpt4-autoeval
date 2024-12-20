@@ -14,5 +14,6 @@ pip install torch
 pip install transformers
 pip install auto-gptq
 pip install huggingface_hub
+pip install openai
 
 echo "Environment setup completed."
