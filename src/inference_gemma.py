@@ -1,24 +1,20 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
-import torch
-import jsonlines
-import argparse
-from pathlib import Path
-
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import jsonlines
 import argparse
 from pathlib import Path
+import os
 
 def setup_model(model_name):
     """Setup model and tokenizer with Gemma-specific configurations"""
-    tokenizer = AutoTokenizer.from_pretrained(model_name) 
+    tokenizer = AutoTokenizer.from_pretrained(model_name,token = os.getenv("HUGGING_FACE_TOKEN") ) 
     
     # モデルの読み込みオプションを設定
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        device_map="cuda",
-        torch_dtype=torch.float16,
+        device_map="auto",
+        torch_dtype=torch.bfloat16,
+        token = os.getenv("HUGGING_FACE_TOKEN") 
     )
     
     return model, tokenizer
