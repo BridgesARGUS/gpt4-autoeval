@@ -3,6 +3,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import jsonlines
 import argparse
 from pathlib import Path
+import os
 
 def setup_model(model_name):
     """Setup model and tokenizer with additional safeguards"""
@@ -11,7 +12,7 @@ def setup_model(model_name):
         tokenizer = AutoTokenizer.from_pretrained(
             model_name,
             trust_remote_code=True,
-            use_fast=False  # Using slow tokenizer for better compatibility
+            use_fast=False,  # Using slow tokenizer for better compatibility
             token=os.environ.get("HUGGING_FACE_TOKEN")
         )
         
