@@ -4,6 +4,14 @@ import jsonlines
 import argparse
 from pathlib import Path
 import os
+from huggingface_hub import snapshot_download
+
+# モデルを明示的にダウンロード
+local_path = snapshot_download(
+    repo_id="shuyuej/gemma-2-27b-it-GPTQ",
+    local_dir="./gemma-model"
+)
+
 
 def setup_model(model_name):
     """Setup model and tokenizer with additional safeguards"""
@@ -17,13 +25,11 @@ def setup_model(model_name):
         )
         
         print(f"Loading model from {model_name}...")
+        # ローカルパスからロード
         model = AutoModelForCausalLM.from_pretrained(
-            model_name,
+            local_path,
             device_map="auto",
-            trust_remote_code=True,
-            torch_dtype=torch.float16,  # Using float16 for better memory efficiency
-            revision="main",  # Explicitly specify the main branch
-            token=os.environ.get("HUGGING_FACE_TOKEN")
+            trust_remote_code=True
         )
         model.eval()  # Ensure model is in evaluation mode
         return model, tokenizer

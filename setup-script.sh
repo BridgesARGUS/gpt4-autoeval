@@ -12,6 +12,7 @@ pip install sentencepiece
 # Install PyTorch and transformers
 pip install torch
 pip install transformers
-pip install auto-qptq
+pip install auto-gptq
+pip install huggingface_hub
 
 echo "Environment setup completed."
