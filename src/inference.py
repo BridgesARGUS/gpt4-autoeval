@@ -7,7 +7,7 @@ import os
 # OpenAIのクライアントを設定
 from openai import OpenAI
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
+    base_url="http://38.147.83.25:46242/v1",
     api_key=os.environ.get("TOKEN"),
 )
 
