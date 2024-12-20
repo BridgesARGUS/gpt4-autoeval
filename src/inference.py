@@ -2,10 +2,13 @@ import json
 import jsonlines
 import openai
 from typing import List, Dict
+import os
 
 # OpenAIのクライアントを設定
-client = openai.OpenAI(
-    api_key="your-api-key-here"  # ✋実際のAPIキーに置き換えてください
+from openai import OpenAI
+client = OpenAI(
+    base_url="http://localhost:8000/v1",
+    api_key=os.environ.get("TOKEN"),
 )
 
 def format_prompt(input_text: str) -> List[Dict]:
@@ -23,7 +26,7 @@ def generate_text(messages: List[Dict]) -> str:
     """
     try:
         response = client.chat.completions.create(
-            model="gpt-4",  # または "gpt-4-turbo-preview" など
+            model="shuyuej/gemma-2-27b-it-GPTQ",  # または "gpt-4-turbo-preview" など
             messages=messages,
             max_tokens=1024,
             temperature=0.8,
