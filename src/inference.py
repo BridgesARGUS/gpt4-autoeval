@@ -12,6 +12,7 @@ def setup_model(model_name):
             model_name,
             trust_remote_code=True,
             use_fast=False  # Using slow tokenizer for better compatibility
+            token=os.environ.get("HUGGING_FACE_TOKEN")
         )
         
         print(f"Loading model from {model_name}...")
@@ -20,7 +21,8 @@ def setup_model(model_name):
             device_map="auto",
             trust_remote_code=True,
             torch_dtype=torch.float16,  # Using float16 for better memory efficiency
-            revision="main"  # Explicitly specify the main branch
+            revision="main",  # Explicitly specify the main branch
+            token=os.environ.get("HUGGING_FACE_TOKEN")
         )
         model.eval()  # Ensure model is in evaluation mode
         return model, tokenizer
